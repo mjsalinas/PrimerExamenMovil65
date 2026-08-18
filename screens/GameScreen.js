@@ -56,7 +56,7 @@ export default function GameScreen({ navigation }) {
         navigation.navigate('ResultScreen', { score: newScore, total: questions.length });
       } else {
         setCurrentQuestion(nextQuestion);
-        setAttempts(10);
+        setAttempts(3);
       }
     } else {
       setAttempts((prev) => prev - 1);
