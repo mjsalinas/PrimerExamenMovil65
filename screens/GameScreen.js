@@ -14,7 +14,7 @@ import { questions } from '../data/questions';
 
   const question = questions[currentQuestion];
 
-  // Controla el temporizador del countdown segundo a segundo
+  
   useEffect(() => {
     if (!isCoolingDown) return;
 
@@ -23,7 +23,7 @@ import { questions } from '../data/questions';
         if (prev <= 1) {
           clearInterval(interval);
           setIsCoolingDown(false);
-          return 3; // Reinicia el valor del contador para la próxima vez
+          return 3; 
         }
         return prev - 1;
       });
@@ -37,13 +37,13 @@ import { questions } from '../data/questions';
       const nextScore = score + 1;
       setScore(nextScore); 
       
-      // Activa penalización de tiempo antes de cambiar de pregunta
+      
       setIsCoolingDown(true);
       setCountdown(3);
 
       const nextQuestion = currentQuestion + 1;
       if (nextQuestion >= questions.length) {
-        // Pasa el parámetro exacto 'puntos' que espera tu ResultScreen
+
         navigation.navigate('Results', { puntos: nextScore }); 
       } else {
         setCurrentQuestion(nextQuestion);
@@ -53,7 +53,6 @@ import { questions } from '../data/questions';
       setAttempts((prev) => {
         const nextAttempts = prev - 1;
         if (nextAttempts <= 0) {
-          // Si se acaban los intentos, va a resultados con el puntaje actual
           navigation.navigate('Results', { puntos: score });
         }
         return nextAttempts;
