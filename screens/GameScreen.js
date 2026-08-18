@@ -1,42 +1,63 @@
+
 import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import OptionButton from '../components/OptionButton';
 import { questions } from '../data/questions';
 
-export default function GameScreen({ navigation }) {
+ export default function GameScreen({ navigation }) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [attempts, setAttempts] = useState(3); // BUG INTENCIONAL 
+  const [attempts, setAttempts] = useState(3); 
   const [score, setScore] = useState(0);
   const [isCoolingDown, setIsCoolingDown] = useState(false);
-  const [countdown, setCountdown] = useState(3); // BUG INTENCIONAL
+  const [countdown, setCountdown] = useState(3); 
 
   const question = questions[currentQuestion];
 
+  // Controla el temporizador del countdown segundo a segundo
   useEffect(() => {
-    // BUG INTENCIONAL
-    setIsCoolingDown(true);
-    setInterval(() => {
-      setCountdown((prev) => prev - 1); // BUG INTENCIONAL
+    if (!isCoolingDown) return;
+
+    const interval = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          setIsCoolingDown(false);
+          return 3; // Reinicia el valor del contador para la próxima vez
+        }
+        return prev - 1;
+      });
     }, 1000);
-    const timer = setTimeout(() => {}, 3000);
-    setIsCoolingDown(false); // BUG INTENCIONAL
-    setAttempts(3); // BUG INTENCIONAL
-    // BUG INTENCIONAL: falta return () => clearTimeout(timer)
-  }, []); // BUG INTENCIONAL
+
+    return () => clearInterval(interval);
+  }, [isCoolingDown]);
 
   const handleAnswer = (index) => {
     if (index === question.correct) {
-      setScore(score); // BUG INTENCIONAL
+      const nextScore = score + 1;
+      setScore(nextScore); 
+      
+      // Activa penalización de tiempo antes de cambiar de pregunta
+      setIsCoolingDown(true);
+      setCountdown(3);
+
       const nextQuestion = currentQuestion + 1;
       if (nextQuestion >= questions.length) {
-        navigation.navigate('Results', { score, total: 5 }); // BUG INTENCIONAL
+        // Pasa el parámetro exacto 'puntos' que espera tu ResultScreen
+        navigation.navigate('Results', { puntos: nextScore }); 
       } else {
         setCurrentQuestion(nextQuestion);
         setAttempts(3);
       }
     } else {
-      setAttempts(attempts + 1); // BUG INTENCIONAL
+      setAttempts((prev) => {
+        const nextAttempts = prev - 1;
+        if (nextAttempts <= 0) {
+          // Si se acaban los intentos, va a resultados con el puntaje actual
+          navigation.navigate('Results', { puntos: score });
+        }
+        return nextAttempts;
+      }); 
     }
   };
 
@@ -52,16 +73,16 @@ export default function GameScreen({ navigation }) {
       <Text
         style={[
           styles.attempts,
-          { color: attempts < 0 ? '#C00000' : '#333' }, // BUG INTENCIONAL
+          { color: attempts <= 1 ? '#C00000' : '#333' }, 
         ]}
       >
         Intentos restantes: {attempts}
       </Text>
 
-      <Text style={styles.question}>{question.question}</Text>
+      <Text style={styles.question}>{question?.question}</Text>
 
       <View style={styles.options}>
-        {question.options.map((option, index) => (
+        {question?.options.map((option, index) => (
           <OptionButton
             key={`${question.id}-${index}`}
             label={option}
@@ -79,7 +100,6 @@ export default function GameScreen({ navigation }) {
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

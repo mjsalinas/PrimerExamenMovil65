@@ -11,7 +11,7 @@ export default function ResultScreen({ navigation, route }) {
         <Text style={styles.subtitle}>Tu puntaje final</Text>
         <Text style={styles.score}>{puntos} / 5</Text>
         <Pressable
-          onPress={() => navigation.goBack()} // BUG INTENCIONAL
+          onPress={() => navigation.goBack("Home")} // BUG INTENCIONAL
           style={styles.button}
         >
           <Text style={styles.buttonLabel}>Jugar de nuevo</Text>
