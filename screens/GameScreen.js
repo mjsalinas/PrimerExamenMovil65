@@ -21,19 +21,20 @@ export default function GameScreen({ navigation }) {
     }, 1000);
     const timer = setTimeout(() => {}, 3000);
     setIsCoolingDown(false); // BUG INTENCIONAL
-    setAttempts(3); // BUG INTENCIONAL
+    setAttempts(3);
+    return ()=> clearTimeout(timer) // BUG INTENCIONAL
     // BUG INTENCIONAL: falta return () => clearTimeout(timer)
   }, []); // BUG INTENCIONAL
 
   const handleAnswer = (index) => {
     if (index === question.correct) {
-      setScore(score); // BUG INTENCIONAL
+      setScore(score + 1); // BUG INTENCIONAL
       const nextQuestion = currentQuestion + 1;
       if (nextQuestion >= questions.length) {
         navigation.navigate('Results', { score, total: 5 }); // BUG INTENCIONAL
       } else {
         setCurrentQuestion(nextQuestion);
-        setAttempts(3);
+        setAttempts(attempts-1);
       }
     } else {
       setAttempts(attempts + 1); // BUG INTENCIONAL
