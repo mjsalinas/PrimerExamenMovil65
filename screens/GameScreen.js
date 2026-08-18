@@ -17,7 +17,7 @@ export default function GameScreen({ navigation }) {
     // BUG INTENCIONAL
     setIsCoolingDown(true);
     setInterval(() => {
-      setCountdown((prev) => prev + 1); // BUG INTENCIONAL
+      setCountdown((prev) => prev - 1); // BUG INTENCIONAL
     }, 1000);
     const timer = setTimeout(() => {}, 3000);
     setIsCoolingDown(false); // BUG INTENCIONAL
@@ -36,7 +36,7 @@ export default function GameScreen({ navigation }) {
         setAttempts(3);
       }
     } else {
-      setAttempts(attempts + 1); // BUG INTENCIONAL
+      setAttempts(attempts - 1); // BUG INTENCIONAL
     }
   };
 
