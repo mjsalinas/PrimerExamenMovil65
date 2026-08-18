@@ -9,21 +9,34 @@ export default function GameScreen({ navigation }) {
   const [attempts, setAttempts] = useState(3); // BUG INTENCIONAL
   const [score, setScore] = useState(0);
   const [isCoolingDown, setIsCoolingDown] = useState(false);
-  const [countdown, setCountdown] = useState(0); // BUG INTENCIONAL
+  const [countdown, setCountdown] = useState(3); // BUG INTENCIONAL
 
   const question = questions[currentQuestion];
 
   useEffect(() => {
     // BUG INTENCIONAL
-    setIsCoolingDown(true);
-    setInterval(() => {
-      setCountdown((prev) => prev + 1); // BUG INTENCIONAL
+  if(isCoolingDown){
+
+    // setInterval(() => {
+    // }, 1000);
+    const timer = setInterval(() => {
+      if(countdown>0){
+
+        setCountdown((prev) => prev - 1); // BUG INTENCIONAL
+      }else{
+    setIsCoolingDown(false); 
+    setAttempts(3); 
+    setCountdown(3);
+      }
+
+
     }, 1000);
-    const timer = setTimeout(() => {}, 3000);
-    setIsCoolingDown(false); // BUG INTENCIONAL
-    setAttempts(3); // BUG INTENCIONAL
-    // BUG INTENCIONAL: falta return () => clearTimeout(timer)
-  }, []); // BUG INTENCIONAL
+
+  
+     return () => clearInterval(timer)
+  }
+
+  }); 
 
   const handleAnswer = (index) => {
     if (index === question.correct) {
@@ -36,8 +49,15 @@ export default function GameScreen({ navigation }) {
         setAttempts(3);
       }
     } else {
-      if(attempts === 0) return;
+      if(attempts <=1) {
+        setIsCoolingDown(true);
       setAttempts(attempts - 1); // BUG INTENCIONAL
+
+      }else{
+      setAttempts(attempts - 1); // BUG INTENCIONAL
+
+      }
+        
     }
   };
 
@@ -53,7 +73,7 @@ export default function GameScreen({ navigation }) {
       <Text
         style={[
           styles.attempts,
-          { color: attempts === 0 ? '#C00000' : '#333' }, // BUG INTENCIONAL
+          { color: attempts <= 1 ? '#C00000' : '#333' }, // BUG INTENCIONAL
         ]}
       >
         Intentos restantes: {attempts}
