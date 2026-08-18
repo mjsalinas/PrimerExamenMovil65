@@ -6,7 +6,7 @@ import { questions } from "../data/questions";
 
 export default function GameScreen({ navigation }) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [attempts, setAttempts] = useState(3); // BUG INTENCIONAL
+  const [attempts, setAttempts] = useState(0); // BUG INTENCIONAL
   const [score, setScore] = useState(0);
   const [isCoolingDown, setIsCoolingDown] = useState(false);
   const [countdown, setCountdown] = useState(0); // BUG INTENCIONAL
@@ -32,11 +32,11 @@ export default function GameScreen({ navigation }) {
       if (nextQuestion >= questions.length) {
         navigation.navigate("Results", { score, total: 5 }); // BUG INTENCIONAL
       } else {
-        setCurrentQuestion(nextQuestion);
-        setAttempts(attempts - 1);
+        setCurrentQuestion(nextQuestion + 1);
+        setAttempts(3);
       }
     } else {
-      setAttempts(attempts + 1); // BUG INTENCIONAL
+      setAttempts(attempts - 1); // BUG INTENCIONAL
     }
   };
 
