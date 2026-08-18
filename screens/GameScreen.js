@@ -6,37 +6,60 @@ import { questions } from '../data/questions';
 
 export default function GameScreen({ navigation }) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [attempts, setAttempts] = useState(0); // BUG INTENCIONAL
+  const [attempts, setAttempts] = useState(3);
   const [score, setScore] = useState(0);
   const [isCoolingDown, setIsCoolingDown] = useState(false);
-  const [countdown, setCountdown] = useState(0); // BUG INTENCIONAL
+  const [countdown, setCountdown] = useState(3);
 
   const question = questions[currentQuestion];
 
+ 
   useEffect(() => {
-    // BUG INTENCIONAL
-    setIsCoolingDown(true);
-    setInterval(() => {
-      setCountdown((prev) => prev + 1); // BUG INTENCIONAL
-    }, 1000);
-    const timer = setTimeout(() => {}, 3000);
-    setIsCoolingDown(false); // BUG INTENCIONAL
-    setAttempts(3); // BUG INTENCIONAL
-    // BUG INTENCIONAL: falta return () => clearTimeout(timer)
-  }, []); // BUG INTENCIONAL
+    if (attempts === 0) {
+      setIsCoolingDown(true);
+      setCountdown(3);
+    }
+  }, [attempts]);
 
+  
+  useEffect(() => {
+    let interval = null;
+    if (isCoolingDown) {
+      interval = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            setIsCoolingDown(false);
+            setAttempts(3); 
+            return 3;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isCoolingDown]);
+
+  
   const handleAnswer = (index) => {
+    if (isCoolingDown) return;
+
     if (index === question.correct) {
-      setScore(score); // BUG INTENCIONAL
+      const newScore = score + 1;
+      setScore(newScore);
       const nextQuestion = currentQuestion + 1;
+
       if (nextQuestion >= questions.length) {
-        navigation.navigate('Results', { score, total: 5 }); // BUG INTENCIONAL
+        navigation.navigate('ResultScreen', { score: newScore, total: questions.length });
       } else {
         setCurrentQuestion(nextQuestion);
-        setAttempts(3);
+        setAttempts(10);
       }
     } else {
-      setAttempts(attempts + 1); // BUG INTENCIONAL
+      setAttempts((prev) => prev - 1);
     }
   };
 
@@ -46,13 +69,13 @@ export default function GameScreen({ navigation }) {
         <Text style={styles.progress}>
           Pregunta {currentQuestion + 1} de {questions.length}
         </Text>
-        <Text style={styles.score}>Puntaje: {score}</Text>
+        <Text style={styles.score}>Puntaje: {score} / {questions.length}</Text>
       </View>
 
       <Text
         style={[
           styles.attempts,
-          { color: attempts < 0 ? '#C00000' : '#333' }, // BUG INTENCIONAL
+          { color: attempts <= 1 ? '#C00000' : '#333' },
         ]}
       >
         Intentos restantes: {attempts}
@@ -66,7 +89,7 @@ export default function GameScreen({ navigation }) {
             key={`${question.id}-${index}`}
             label={option}
             onPress={() => handleAnswer(index)}
-            disabled={isCoolingDown}
+            disabled={isCoolingDown} 
           />
         ))}
       </View>
