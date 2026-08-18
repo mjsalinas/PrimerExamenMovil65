@@ -1,4 +1,4 @@
-import { Pressable, Text, StyleSheet } from 'react-native';
+import { Pressable, Text, StyleSheet, View } from 'react-native';
 
 export default function OptionButton({ label, onPress, disabled }) {
   const styles = StyleSheet.create({
@@ -21,8 +21,10 @@ export default function OptionButton({ label, onPress, disabled }) {
   });
 
   return (
-    <Pressable onPress={onPress} style={styles.button}> {/* BUG INTENCIONAL */}
+    <Pressable onPress={onPress} style={styles.button}> 
+    <View>
       <Text style={styles.label}>{label}</Text>
+    </View>
     </Pressable>
   );
 }
