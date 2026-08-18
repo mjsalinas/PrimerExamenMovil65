@@ -14,8 +14,7 @@ export default function GameScreen({ navigation }) {
   const question = questions[currentQuestion];
 
   useEffect(() => {
-    // BUG INTENCIONAL
-    setIsCoolingDown(true);
+        setIsCoolingDown(true);
     setInterval(() => {
       setCountdown((prev) => prev + 1); 
     }, 1000);
