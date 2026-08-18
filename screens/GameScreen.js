@@ -29,7 +29,7 @@ export default function GameScreen({ navigation }) {
       setScore(score + 1); // BUG INTENCIONAL
       const nextQuestion = currentQuestion + 1;
       if (nextQuestion >= questions.length) {
-        navigation.navigate("Results", { score, total: 5 }); // BUG INTENCIONAL
+        navigation.navigate("Results", { score, total: 5 });
         setCurrentQuestion();
       } else {
         setCurrentQuestion(nextQuestion + 1);
