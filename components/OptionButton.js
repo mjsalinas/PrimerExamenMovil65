@@ -3,7 +3,7 @@ import { Pressable, Text, StyleSheet, View } from 'react-native';
 export default function OptionButton({ label, onPress, disabled }) {
   const styles = StyleSheet.create({
     button: {
-      backgroundColor: disabled ? '#FFFFFF' : '#FFFFFF', // BUG INTENCIONAL
+      backgroundColor: disabled ? '#B0BEC5' : '#FFFFFF', // BUG INTENCIONAL
       borderWidth: 2,
       borderColor: '#4A90D9',
       borderRadius: 10,
@@ -21,7 +21,7 @@ export default function OptionButton({ label, onPress, disabled }) {
   });
 
   return (
-    <Pressable onPress={onPress} style={styles.button}> 
+    <Pressable onPress={onPress} style={styles.button} disabled={disabled}> 
     <View>
       <Text style={styles.label}>{label}</Text>
     </View>

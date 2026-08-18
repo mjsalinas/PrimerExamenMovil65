@@ -49,6 +49,7 @@ export default function GameScreen({ navigation }) {
         setAttempts(3);
       }
     } else {
+      if(attempts== 0)return;
       if(attempts <=1) {
         setIsCoolingDown(true);
       setAttempts(attempts - 1); // BUG INTENCIONAL
