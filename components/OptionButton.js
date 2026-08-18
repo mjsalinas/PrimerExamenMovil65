@@ -1,28 +1,56 @@
 import { Pressable, Text, StyleSheet } from 'react-native';
 
 export default function OptionButton({ label, onPress, disabled }) {
-  const styles = StyleSheet.create({
-    button: {
-      backgroundColor: disabled ? '#FFFFFF' : '#FFFFFF', // BUG INTENCIONAL
-      borderWidth: 2,
-      borderColor: '#4A90D9',
-      borderRadius: 10,
-      paddingVertical: 14,
-      paddingHorizontal: 16,
-      marginVertical: 6,
-      opacity: 1, // BUG INTENCIONAL
-    },
-    label: {
-      fontSize: 16,
-      color: disabled ? '#546E7A' : '#212121',
-      textAlign: 'center',
-      fontWeight: '600',
-    },
-  });
-
   return (
-    <Pressable onPress={onPress} style={styles.button}> {/* BUG INTENCIONAL */}
-      <Text style={styles.label}>{label}</Text>
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      style={({ pressed }) => [
+        styles.button,
+        disabled && styles.buttonDisabled,
+        pressed && !disabled && styles.buttonPressed,
+      ]}
+    >
+      <Text
+        style={[
+          styles.label,
+          disabled && styles.labelDisabled,
+        ]}
+      >
+        {label}
+      </Text>
     </Pressable>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 2,
+    borderColor: '#4A90D9',
+    borderRadius: 10,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    marginVertical: 6,
+  },
+
+  buttonDisabled: {
+    backgroundColor: '#B0BEC5',
+    opacity: 0.6,
+  },
+
+  buttonPressed: {
+    backgroundColor: '#E3F2FD',
+  },
+
+  label: {
+    fontSize: 16,
+    color: '#212121',
+    textAlign: 'center',
+    fontWeight: '600',
+  },
+
+  labelDisabled: {
+    color: '#546E7A',
+  },
+});
