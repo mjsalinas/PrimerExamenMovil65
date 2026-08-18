@@ -1,28 +1,51 @@
-import { Pressable, Text, StyleSheet } from 'react-native';
+import React from 'react';
+import { Pressable, Text, StyleSheet } from 'react-native' ;
 
-export default function OptionButton({ label, onPress, disabled }) {
-  const styles = StyleSheet.create({
-    button: {
-      backgroundColor: disabled ? '#FFFFFF' : '#FFFFFF', // BUG INTENCIONAL
-      borderWidth: 2,
-      borderColor: '#4A90D9',
-      borderRadius: 10,
-      paddingVertical: 14,
-      paddingHorizontal: 16,
-      marginVertical: 6,
-      opacity: 1, // BUG INTENCIONAL
-    },
-    label: {
-      fontSize: 16,
-      color: disabled ? '#546E7A' : '#212121',
-      textAlign: 'center',
-      fontWeight: '600',
-    },
-  });
-
-  return (
-    <Pressable onPress={onPress} style={styles.button}> {/* BUG INTENCIONAL */}
-      <Text style={styles.label}>{label}</Text>
-    </Pressable>
+export default function OptionButton ({ title, onPress, disabled }) {
+return ( 
+  <Pressable
+    onPress={onPress}
+    disabled={disabled}
+    style={({ pressed }) => [
+      styles.button,
+      pressed && styles.pressed,
+      disabled && styles.disabledButton,
+    ]}
+    >
+      <Text style={[styles.text, disabled && styles.disabledText]}>
+      {title}
+      </Text>
+      </Pressable>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#4A90D9',
+    borderWidth: 3,
+    borderRadius: 8,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    marginVertical: 6,
+    alignItems: 'center'
+    justifyContent: 'center',
+  },
+  pressed: {
+    backgroundColor: '#E3F2FD',
+  },
+  disabledButton: {
+    backgroundColor: '#B0BEC5',
+    opacity: 0.6,
+  },
+  text: {
+    fontSize: 16,
+    color: '#000000',
+    fontWeight: '500',
+    textAlign: 'center',
+  },
+  disabledText: {
+    color: '#546E7A',
+  },
+});
+
