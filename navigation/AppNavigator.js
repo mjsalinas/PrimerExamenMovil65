@@ -1,12 +1,12 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import GameScreen from '../screens/GameScreen';
 import ResultScreen from '../screens/ResultScreen';
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 export default function AppNavigator() {
   return (
-    <Stack.Navigator> {/* BUG INTENCIONAL */}
+    <Stack.Navigator>
       <Stack.Screen name="GameScreen" component={GameScreen} />
       <Stack.Screen name="ResultScreen" component={ResultScreen} />
     </Stack.Navigator>
