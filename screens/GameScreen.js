@@ -6,10 +6,10 @@ import { questions } from '../data/questions';
 
 export default function GameScreen({ navigation }) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [attempts, setAttempts] = useState(0); // BUG INTENCIONAL
+  const [attempts, setAttempts] = useState(3); // BUG INTENCIONAL 
   const [score, setScore] = useState(0);
   const [isCoolingDown, setIsCoolingDown] = useState(false);
-  const [countdown, setCountdown] = useState(0); // BUG INTENCIONAL
+  const [countdown, setCountdown] = useState(3); // BUG INTENCIONAL
 
   const question = questions[currentQuestion];
 
@@ -17,7 +17,7 @@ export default function GameScreen({ navigation }) {
     // BUG INTENCIONAL
     setIsCoolingDown(true);
     setInterval(() => {
-      setCountdown((prev) => prev + 1); // BUG INTENCIONAL
+      setCountdown((prev) => prev - 1); // BUG INTENCIONAL
     }, 1000);
     const timer = setTimeout(() => {}, 3000);
     setIsCoolingDown(false); // BUG INTENCIONAL
