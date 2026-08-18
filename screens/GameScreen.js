@@ -4,12 +4,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import OptionButton from '../components/OptionButton';
 import { questions } from '../data/questions';
 
+
 export default function GameScreen({ navigation }) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [attempts, setAttempts] = useState(0); 
+  const [attempts, setAttempts] = useState(3); 
   const [score, setScore] = useState(0);
   const [isCoolingDown, setIsCoolingDown] = useState(false);
-  const [countdown, setCountdown] = useState(0); 
+  const [countdown, setCountdown] = useState(3); 
 
   const question = questions[currentQuestion];
 
@@ -26,16 +27,19 @@ export default function GameScreen({ navigation }) {
 
   const handleAnswer = (index) => {
     if (index === question.correct) {
-      setScore(score); 
+      setScore(score + 1); 
       const nextQuestion = currentQuestion + 1;
       if (nextQuestion >= questions.length) {
-        navigation.navigate('Results', { score, total: 5 }); 
+        navigation.navigate('ResultScreen', { 
+          score: score + 1, 
+          total: 5 
+        }); 
       } else {
         setCurrentQuestion(nextQuestion);
         setAttempts(3);
       }
     } else {
-      setAttempts(attempts + 1); 
+      setAttempts(attempts - 1); 
     }
   };
 
@@ -45,13 +49,13 @@ export default function GameScreen({ navigation }) {
         <Text style={styles.progress}>
           Pregunta {currentQuestion + 1} de {questions.length}
         </Text>
-        <Text style={styles.score}>Puntaje: {score}</Text>
+        <Text style={styles.score}>Puntaje: {score} / 5</Text>
       </View>
 
       <Text
         style={[
           styles.attempts,
-          { color: attempts < 0 ? '#C00000' : '#333' }, 
+          { color: attempts <= 1 ? '#C00000' : '#333' }, 
         ]}
       >
         Intentos restantes: {attempts}
@@ -125,3 +129,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
