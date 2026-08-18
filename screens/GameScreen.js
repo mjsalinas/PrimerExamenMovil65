@@ -46,13 +46,13 @@ export default function GameScreen({ navigation }) {
         <Text style={styles.progress}>
           Pregunta {currentQuestion + 1} de {questions.length}
         </Text>
-        <Text style={styles.score}>Puntaje: {score}</Text>
+        <Text style={styles.score}>Puntaje: {score} / 5</Text>
       </View>
 
       <Text
         style={[
           styles.attempts,
-          { color: attempts < 0 ? "#C00000" : "#333" }, // BUG INTENCIONAL
+          { color: attempts <= 1 ? "#C00000" : "#333" }, // BUG INTENCIONAL
         ]}
       >
         Intentos restantes: {attempts}
