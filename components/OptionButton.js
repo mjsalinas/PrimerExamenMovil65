@@ -23,8 +23,6 @@ export default function OptionButton({ label, onPress, disabled }) {
 
   return (
     <Pressable disabled={disabled} onPress={onPress} style={styles.button}>
-      {" "}
-      {/* BUG INTENCIONAL */}
       <Text style={styles.label}>{label}</Text>
     </Pressable>
   );
