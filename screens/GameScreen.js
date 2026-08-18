@@ -17,17 +17,21 @@ export default function GameScreen({ navigation }) {
     // BUG INTENCIONAL
     setIsCoolingDown(true);
     setInterval(() => {
-      setCountdown((prev) => prev - 1); // BUG INTENCIONAL
+      setCountdown((prev) => prev + 1); // BUG INTENCIONAL
     }, 1000);
     const timer = setTimeout(() => {}, 3000);
     setIsCoolingDown(false); // BUG INTENCIONAL
-    setAttempts(3); // BUG INTENCIONAL
+    setAttempts(3); 
+    
+    return () => clearTimeout(timer)
+
+    // BUG INTENCIONAL
     // BUG INTENCIONAL: falta return () => clearTimeout(timer)
   }, []); // BUG INTENCIONAL
 
   const handleAnswer = (index) => {
     if (index === question.correct) {
-      setScore(score); // BUG INTENCIONAL
+      setScore(score+5); // BUG INTENCIONAL
       const nextQuestion = currentQuestion + 1;
       if (nextQuestion >= questions.length) {
         navigation.navigate('Results', { score, total: 5 }); // BUG INTENCIONAL
@@ -71,7 +75,7 @@ export default function GameScreen({ navigation }) {
         ))}
       </View>
 
-      {isCoolingDown && (
+      {!isCoolingDown && (
         <Text style={styles.cooldown}>
           ⏳ Espera {countdown} segundo(s)...
         </Text>
