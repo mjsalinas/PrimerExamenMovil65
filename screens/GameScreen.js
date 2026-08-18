@@ -6,7 +6,7 @@ import { questions } from '../data/questions';
 
 export default function GameScreen({ navigation }) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [attempts, setAttempts] = useState(0); // BUG INTENCIONAL
+  const [attempts, setAttempts] = useState(3); // BUG INTENCIONAL
   const [score, setScore] = useState(0);
   const [isCoolingDown, setIsCoolingDown] = useState(false);
   const [countdown, setCountdown] = useState(0); // BUG INTENCIONAL
@@ -36,7 +36,8 @@ export default function GameScreen({ navigation }) {
         setAttempts(3);
       }
     } else {
-      setAttempts(attempts + 1); // BUG INTENCIONAL
+      if(attempts === 0) return;
+      setAttempts(attempts - 1); // BUG INTENCIONAL
     }
   };
 
@@ -52,7 +53,7 @@ export default function GameScreen({ navigation }) {
       <Text
         style={[
           styles.attempts,
-          { color: attempts < 0 ? '#C00000' : '#333' }, // BUG INTENCIONAL
+          { color: attempts === 0 ? '#C00000' : '#333' }, // BUG INTENCIONAL
         ]}
       >
         Intentos restantes: {attempts}
