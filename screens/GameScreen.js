@@ -6,7 +6,7 @@ import { questions } from '../data/questions';
 
 export default function GameScreen({ navigation }) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [attempts, setAttempts] = useState(0); // BUG INTENCIONAL
+  const [attempts, setAttempts] = useState(3);
   const [score, setScore] = useState(0);
   const [isCoolingDown, setIsCoolingDown] = useState(false);
   const [countdown, setCountdown] = useState(0); // BUG INTENCIONAL
@@ -20,23 +20,29 @@ export default function GameScreen({ navigation }) {
       setCountdown((prev) => prev + 1); // BUG INTENCIONAL
     }, 1000);
     const timer = setTimeout(() => {}, 3000);
-    setIsCoolingDown(false); // BUG INTENCIONAL
-    setAttempts(3); // BUG INTENCIONAL
+    setIsCoolingDown(false); 
+
     // BUG INTENCIONAL: falta return () => clearTimeout(timer)
-  }, []); // BUG INTENCIONAL
+  }, []);
 
   const handleAnswer = (index) => {
     if (index === question.correct) {
-      setScore(score); // BUG INTENCIONAL
+      const newScore = score + 1;
+      setScore(newScore);
+
       const nextQuestion = currentQuestion + 1;
+
       if (nextQuestion >= questions.length) {
-        navigation.navigate('Results', { score, total: 5 }); // BUG INTENCIONAL
+        navigation.navigate('Results', {
+          score: newScore,
+          total: 5,
+        });
       } else {
         setCurrentQuestion(nextQuestion);
         setAttempts(3);
       }
     } else {
-      setAttempts(attempts + 1); // BUG INTENCIONAL
+      setAttempts(attempts - 1);
     }
   };
 
@@ -46,19 +52,26 @@ export default function GameScreen({ navigation }) {
         <Text style={styles.progress}>
           Pregunta {currentQuestion + 1} de {questions.length}
         </Text>
-        <Text style={styles.score}>Puntaje: {score}</Text>
+
+        <Text style={styles.score}>
+          Puntaje: {score} / 5
+        </Text>
       </View>
 
       <Text
         style={[
           styles.attempts,
-          { color: attempts < 0 ? '#C00000' : '#333' }, // BUG INTENCIONAL
+          {
+            color: attempts <= 1 ? '#C00000' : '#333',
+          },
         ]}
       >
         Intentos restantes: {attempts}
       </Text>
 
-      <Text style={styles.question}>{question.question}</Text>
+      <Text style={styles.question}>
+        {question.question}
+      </Text>
 
       <View style={styles.options}>
         {question.options.map((option, index) => (
