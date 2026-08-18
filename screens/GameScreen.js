@@ -40,7 +40,7 @@ export default function GameScreen({ navigation }) {
 
   const handleAnswer = (index) => {
     if (index === question.correct) {
-      setScore(score); // BUG INTENCIONAL
+      setScore(preScore => preScore + 1); // BUG INTENCIONAL
       const nextQuestion = currentQuestion + 1;
       if (nextQuestion >= questions.length) {
         navigation.navigate('Results', { score, total: 5 }); // BUG INTENCIONAL
