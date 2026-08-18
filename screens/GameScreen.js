@@ -9,23 +9,47 @@ export default function GameScreen({ navigation }) {
   const [attempts, setAttempts] = useState(3);
   const [score, setScore] = useState(0);
   const [isCoolingDown, setIsCoolingDown] = useState(false);
-  const [countdown, setCountdown] = useState(0); // BUG INTENCIONAL
+  const [countdown, setCountdown] = useState(3);
 
   const question = questions[currentQuestion];
 
+  // Activa el cooldown cuando se agotan los 3 intentos
   useEffect(() => {
-    // BUG INTENCIONAL
-    setIsCoolingDown(true);
-    setInterval(() => {
-      setCountdown((prev) => prev + 1); // BUG INTENCIONAL
-    }, 1000);
-    const timer = setTimeout(() => {}, 3000);
-    setIsCoolingDown(false); 
+    if (attempts === 0 && !isCoolingDown) {
+      setIsCoolingDown(true);
+      setCountdown(3);
+    }
+  }, [attempts, isCoolingDown]);
 
-    // BUG INTENCIONAL: falta return () => clearTimeout(timer)
-  }, []);
+  // Maneja la cuenta regresiva del cooldown
+  useEffect(() => {
+    if (!isCoolingDown) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          setIsCoolingDown(false);
+          setAttempts(3);
+          return 0;
+        }
+
+        return prev - 1;
+      });
+    }, 1000);
+
+    // Limpieza del intervalo al desmontar el componente
+    return () => clearInterval(interval);
+  }, [isCoolingDown]);
 
   const handleAnswer = (index) => {
+    // No permite responder durante el cooldown
+    if (isCoolingDown) {
+      return;
+    }
+
     if (index === question.correct) {
       const newScore = score + 1;
       setScore(newScore);
@@ -42,7 +66,7 @@ export default function GameScreen({ navigation }) {
         setAttempts(3);
       }
     } else {
-      setAttempts(attempts - 1);
+      setAttempts((prev) => Math.max(prev - 1, 0));
     }
   };
 
