@@ -3,12 +3,12 @@ import { Pressable, Text, StyleSheet } from 'react-native';
 export default function OptionButton({ label, onPress, disabled }) {
   return (
     <Pressable
-      disabled={disabled}
+      disabled={disabled} // BUG INTENCIONAL
       onPress={onPress}
       style={({ pressed }) => [
         styles.button,
         disabled
-          ? styles.buttonDisabled
+          ? styles.buttonDisabled // BUG INTENCIONAL
           : pressed
           ? styles.buttonPressed
           : styles.buttonNormal,
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: {
     backgroundColor: '#B0BEC5',
-    opacity: 0.6,
+    opacity: 0.6, // BUG INTENCIONAL
   },
   label: {
     fontSize: 16,
