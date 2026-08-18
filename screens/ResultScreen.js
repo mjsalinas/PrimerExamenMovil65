@@ -1,8 +1,8 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function ResultScreen({ navigation, route }) {
-  const { puntos } = route.params; // BUG INTENCIONAL
+export default function ResultScreen({ navigation }) {
+  const { puntos } = navigation.params;
 
   return (
     <SafeAreaView style={styles.container}>

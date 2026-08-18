@@ -16,27 +16,36 @@ export default function GameScreen({ navigation }) {
   useEffect(() => {
     // BUG INTENCIONAL
     setIsCoolingDown(true);
-    setInterval(() => {
-      setCountdown((prev) => prev + 1); // BUG INTENCIONAL
+    let segundos = 3
+    
+    const intervalo = setInterval(() => {
+      setCountdown(segundos);
+      
+      segundos--;
     }, 1000);
-    const timer = setTimeout(() => {}, 3000);
-    setIsCoolingDown(false); // BUG INTENCIONAL
-    setAttempts(3); // BUG INTENCIONAL
-    // BUG INTENCIONAL: falta return () => clearTimeout(timer)
+    const timer = setTimeout(() => { clearInterval(intervalo); setIsCoolingDown(false); setAttempts(3);}, 3000);
+
+   
+    return () => clearTimeout(timer)
   }, []); // BUG INTENCIONAL
 
   const handleAnswer = (index) => {
     if (index === question.correct) {
-      setScore(score); // BUG INTENCIONAL
+     
       const nextQuestion = currentQuestion + 1;
       if (nextQuestion >= questions.length) {
         navigation.navigate('Results', { score, total: 5 }); // BUG INTENCIONAL
       } else {
         setCurrentQuestion(nextQuestion);
         setAttempts(3);
+        setScore(score + 1);
       }
     } else {
-      setAttempts(attempts + 1); // BUG INTENCIONAL
+      if(attempts === 0){
+        setIsCoolingDown(true);
+        return;
+      }
+      setAttempts(attempts -1);
     }
   };
 
@@ -46,13 +55,13 @@ export default function GameScreen({ navigation }) {
         <Text style={styles.progress}>
           Pregunta {currentQuestion + 1} de {questions.length}
         </Text>
-        <Text style={styles.score}>Puntaje: {score}</Text>
+        <Text style={styles.score}>Puntaje: {score}/5</Text>
       </View>
 
       <Text
         style={[
           styles.attempts,
-          { color: attempts < 0 ? '#C00000' : '#333' }, // BUG INTENCIONAL
+          { color: attempts <= 1 ? '#C00000' : '#333' }, // BUG INTENCIONAL
         ]}
       >
         Intentos restantes: {attempts}
