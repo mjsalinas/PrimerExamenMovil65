@@ -1,4 +1,4 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native';
 import GameScreen from '../screens/GameScreen';
 import ResultScreen from '../screens/ResultScreen';
 
