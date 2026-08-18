@@ -46,7 +46,10 @@ export default function GameScreen({ navigation }) {
       setScore(score + 1);
       const nextQuestion = currentQuestion + 1;
       if (nextQuestion >= questions.length) {
-        navigation.navigate('Results', { score: score + 1, total: 5 });
+        navigation.navigate('ResultScreen', {
+          score: score + 1,
+          total: 5,
+        });
       } else {
         setCurrentQuestion(nextQuestion);
         setAttempts(3);

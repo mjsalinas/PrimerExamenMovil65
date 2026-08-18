@@ -6,7 +6,9 @@ const Stack = createStackNavigator();
 
 export default function AppNavigator() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      initialRouteName="GameScreen"
+      screenOptions={{ headerShown: false }}>
       <Stack.Screen name="GameScreen" component={GameScreen} />
       <Stack.Screen name="ResultScreen" component={ResultScreen} />
     </Stack.Navigator>
