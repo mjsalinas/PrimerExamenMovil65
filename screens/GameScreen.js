@@ -9,23 +9,38 @@ export default function GameScreen({ navigation }) {
   const [attempts, setAttempts] = useState(3);
   const [score, setScore] = useState(0);
   const [isCoolingDown, setIsCoolingDown] = useState(false);
-  const [countdown, setCountdown] = useState(0); // BUG INTENCIONAL
+  const [countdown, setCountdown] = useState(3);
 
   const question = questions[currentQuestion];
 
   useEffect(() => {
-    // BUG INTENCIONAL
-    setIsCoolingDown(true);
-    setInterval(() => {
-      setCountdown((prev) => prev + 1); // BUG INTENCIONAL
-    }, 1000);
-    const timer = setTimeout(() => {}, 3000);
-    setIsCoolingDown(false); // BUG INTENCIONAL
-    setAttempts(3); // BUG INTENCIONAL
-    // BUG INTENCIONAL: falta return () => clearTimeout(timer)
-  }, []); // BUG INTENCIONAL
+    if (attempts === 0) {
+      setIsCoolingDown(true);
+      setCountdown(3);
+    }
+  }, [attempts]);
 
-  
+  useEffect(() => {
+    if (!isCoolingDown) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setCountdown((previousCountdown) => {
+        if (previousCountdown <= 1) {
+          clearInterval(interval);
+          setIsCoolingDown(false);
+          setAttempts(3);
+          return 0;
+        }
+
+        return previousCountdown - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isCoolingDown]);
+
   const handleAnswer = (index) => {
     if (index === question.correct) {
       setScore(score + 1);
