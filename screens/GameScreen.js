@@ -14,7 +14,6 @@ export default function GameScreen({ navigation }) {
   const question = questions[currentQuestion];
 
   useEffect(() => {
-    // BUG INTENCIONAL
     setIsCoolingDown(true);
     setInterval(() => {
       setCountdown((prev) => prev + 1); // BUG INTENCIONAL
@@ -22,8 +21,8 @@ export default function GameScreen({ navigation }) {
     const timer = setTimeout(() => {}, 3000);
     setIsCoolingDown(false); // BUG INTENCIONAL
     setAttempts(3); // BUG INTENCIONAL
-    // BUG INTENCIONAL: falta return () => clearTimeout(timer)
-  }, []); // BUG INTENCIONAL
+    return () => clearTimeout(timer);
+  }, 3000);
 
   const handleAnswer = (index) => {
     if (index === question.correct) {
@@ -31,6 +30,7 @@ export default function GameScreen({ navigation }) {
       const nextQuestion = currentQuestion + 1;
       if (nextQuestion >= questions.length) {
         navigation.navigate("Results", { score, total: 5 }); // BUG INTENCIONAL
+        setCurrentQuestion();
       } else {
         setCurrentQuestion(nextQuestion + 1);
         setAttempts(3);
