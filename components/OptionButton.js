@@ -3,14 +3,17 @@ import { Pressable, Text, StyleSheet } from 'react-native';
 export default function OptionButton({ label, onPress, disabled }) {
   const styles = StyleSheet.create({
     button: {
-      backgroundColor: disabled ? '#FFFFFF' : '#FFFFFF', // BUG INTENCIONAL
+      backgroundColor: disabled ? '#B0BEC5' : '#FFFFFF', // BUG INTENCIONAL
       borderWidth: 2,
       borderColor: '#4A90D9',
       borderRadius: 10,
       paddingVertical: 14,
       paddingHorizontal: 16,
       marginVertical: 6,
-      opacity: 1, // BUG INTENCIONAL
+      opacity: disabled ? 0.6 : 1, // BUG INTENCIONAL
+    },
+    buttonPressed: {
+      backgroundColor: '#E3F2FD',
     },
     label: {
       fontSize: 16,
@@ -21,7 +24,14 @@ export default function OptionButton({ label, onPress, disabled }) {
   });
 
   return (
-    <Pressable onPress={onPress} style={styles.button}> {/* BUG INTENCIONAL */}
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      style={({ pressed }) => [
+        styles.button,
+        pressed && !disabled && styles.buttonPressed,
+      ]}
+    >
       <Text style={styles.label}>{label}</Text>
     </Pressable>
   );
