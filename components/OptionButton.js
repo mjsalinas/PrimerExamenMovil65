@@ -10,7 +10,7 @@ export default function OptionButton({ label, onPress, disabled }) {
       paddingVertical: 14,
       paddingHorizontal: 16,
       marginVertical: 6,
-      opacity: disabled ? 0.6 : 1, // BUG INTENCIONAL
+      opacity: disabled ? 0.6 : 1,
     },
     label: {
       fontSize: 16,
