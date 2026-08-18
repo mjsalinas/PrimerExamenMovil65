@@ -44,7 +44,7 @@ export default function GameScreen({ navigation }) {
       setScore(newScore); // BUG INTENCIONAL
       const nextQuestion = currentQuestion + 1;
       if (nextQuestion >= questions.length) {
-        navigation.navigate('Results', { score: newScore, total: 5 }); // BUG INTENCIONAL
+        navigation.navigate('ResultScreen', { score: newScore, total: 5 });
       } else {
         setCurrentQuestion(nextQuestion);
         setAttempts(3);
