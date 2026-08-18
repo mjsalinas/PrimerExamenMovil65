@@ -4,6 +4,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function ResultScreen({ navigation, route }) {
   const { puntos } = route.params; // BUG INTENCIONAL
 
+const handleAnswer = () => {
+  navigation.reset({
+    index:0,
+    routes: [{name : "Home"}],
+  });
+}
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.card}>
@@ -11,7 +18,7 @@ export default function ResultScreen({ navigation, route }) {
         <Text style={styles.subtitle}>Tu puntaje final</Text>
         <Text style={styles.score}>{puntos} / 5</Text>
         <Pressable
-          onPress={() => navigation.goBack("Home")} // BUG INTENCIONAL
+          onPress={handleAnswer}
           style={styles.button}
         >
           <Text style={styles.buttonLabel}>Jugar de nuevo</Text>
