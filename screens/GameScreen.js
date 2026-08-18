@@ -1,128 +1,133 @@
-import { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import OptionButton from '../components/OptionButton';
 import { questions } from '../data/questions';
 
 export default function GameScreen({ navigation }) {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [attempts, setAttempts] = useState(0); // BUG INTENCIONAL
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [attempts, setAttempts] = useState(3);
   const [score, setScore] = useState(0);
   const [isCoolingDown, setIsCoolingDown] = useState(false);
-  const [countdown, setCountdown] = useState(0); // BUG INTENCIONAL
+  const [cooldownTimer, setCooldownTimer] = useState(3);
 
-  const question = questions[currentQuestion];
+  const currentQuestion = questions[currentIndex];
 
+  // Inciso D: Detecta cuando los intentos llegan a 0 para iniciar el cooldown
   useEffect(() => {
-    // BUG INTENCIONAL
-    setIsCoolingDown(true);
-    setInterval(() => {
-      setCountdown((prev) => prev + 1); // BUG INTENCIONAL
-    }, 1000);
-    const timer = setTimeout(() => {}, 3000);
-    setIsCoolingDown(false); // BUG INTENCIONAL
-    setAttempts(3); // BUG INTENCIONAL
-    // BUG INTENCIONAL: falta return () => clearTimeout(timer)
-  }, []); // BUG INTENCIONAL
+    if (attempts === 0 && !isCoolingDown) {
+      setIsCoolingDown(true);
+      setCooldownTimer(3);
+    }
+  }, [attempts]);
 
-  const handleAnswer = (index) => {
-    if (index === question.correct) {
-      setScore(score); // BUG INTENCIONAL
-      const nextQuestion = currentQuestion + 1;
-      if (nextQuestion >= questions.length) {
-        navigation.navigate('Results', { score, total: 5 }); // BUG INTENCIONAL
-      } else {
-        setCurrentQuestion(nextQuestion);
+  // Inciso D: Manejo del temporizador (setInterval) con su respectiva limpieza
+  useEffect(() => {
+    let interval = null;
+
+    if (isCoolingDown) {
+      interval = setInterval(() => {
+        setCooldownTimer((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            setIsCoolingDown(false);
+            setAttempts(3);
+            return 3;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isCoolingDown]);
+
+  const handleSelectOption = (index) => {
+    if (isCoolingDown) return;
+
+    if (index === currentQuestion.correctIndex) {
+      const newScore = score + 1;
+      setScore(newScore);
+
+      if (currentIndex + 1 < questions.length) {
+        setCurrentIndex(currentIndex + 1);
         setAttempts(3);
+      } else {
+        navigation.navigate('ResultScreen', { score: newScore, total: questions.length });
       }
     } else {
-      setAttempts(attempts + 1); // BUG INTENCIONAL
+      setAttempts((prev) => prev - 1);
     }
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.progress}>
-          Pregunta {currentQuestion + 1} de {questions.length}
+    <View style={styles.container}>
+      <Text style={styles.scoreText}>Puntaje: {score} / {questions.length}</Text>
+      
+      <Text style={styles.questionText}>{currentQuestion.question}</Text>
+
+      {isCoolingDown ? (
+        <Text style={styles.cooldownText}>
+          Espera {cooldownTimer} segundo(s)...
         </Text>
-        <Text style={styles.score}>Puntaje: {score}</Text>
-      </View>
+      ) : (
+        <Text style={[styles.attemptsText, attempts <= 1 && styles.warningAttempts]}>
+          Intentos restantes: {attempts}
+        </Text>
+      )}
 
-      <Text
-        style={[
-          styles.attempts,
-          { color: attempts < 0 ? '#C00000' : '#333' }, // BUG INTENCIONAL
-        ]}
-      >
-        Intentos restantes: {attempts}
-      </Text>
-
-      <Text style={styles.question}>{question.question}</Text>
-
-      <View style={styles.options}>
-        {question.options.map((option, index) => (
+      <View style={styles.optionsContainer}>
+        {currentQuestion.options.map((option, idx) => (
           <OptionButton
-            key={`${question.id}-${index}`}
-            label={option}
-            onPress={() => handleAnswer(index)}
+            key={idx}
+            title={option}
             disabled={isCoolingDown}
+            onPress={() => handleSelectOption(idx)}
           />
         ))}
       </View>
-
-      {isCoolingDown && (
-        <Text style={styles.cooldown}>
-          ⏳ Espera {countdown} segundo(s)...
-        </Text>
-      )}
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F7FA',
-    paddingHorizontal: 20,
-    paddingTop: 12,
+    padding: 20,
+    justifyContent: 'center',
+    backgroundColor: '#F5F5F5',
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  progress: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#4A90D9',
-  },
-  score: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#333',
-  },
-  attempts: {
-    fontSize: 15,
-    fontWeight: '600',
-    marginBottom: 24,
-  },
-  question: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#1A237E',
-    marginBottom: 24,
-    lineHeight: 30,
-  },
-  options: {
-    marginBottom: 16,
-  },
-  cooldown: {
-    marginTop: 12,
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#E65100',
+  scoreText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
     textAlign: 'center',
+  },
+  questionText: {
+    fontSize: 20,
+    fontWeight: '600',
+    marginVertical: 20,
+    textAlign: 'center',
+  },
+  attemptsText: {
+    fontSize: 16,
+    color: '#333',
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  warningAttempts: {
+    color: '#C00000',
+    fontWeight: 'bold',
+  },
+  cooldownText: {
+    fontSize: 16,
+    color: '#D32F2F',
+    fontWeight: 'bold',
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  optionsContainer: {
+    width: '100%',
   },
 });

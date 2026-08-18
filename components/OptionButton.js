@@ -1,21 +1,21 @@
 import React from 'react';
-import { Pressable, Text, StyleSheet } from 'react-native' ;
+import { Pressable, Text, StyleSheet } from 'react-native';
 
-export default function OptionButton ({ title, onPress, disabled }) {
-return ( 
-  <Pressable
-    onPress={onPress}
-    disabled={disabled}
-    style={({ pressed }) => [
-      styles.button,
-      pressed && styles.pressed,
-      disabled && styles.disabledButton,
-    ]}
+export default function OptionButton({ title, onPress, disabled }) {
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      style={({ pressed }) => [
+        styles.button,
+        pressed && styles.pressed,
+        disabled && styles.disabledButton,
+      ]}
     >
       <Text style={[styles.text, disabled && styles.disabledText]}>
-      {title}
+        {title}
       </Text>
-      </Pressable>
+    </Pressable>
   );
 }
 
@@ -23,12 +23,12 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#FFFFFF',
     borderColor: '#4A90D9',
-    borderWidth: 3,
+    borderWidth: 2,
     borderRadius: 8,
     paddingVertical: 14,
     paddingHorizontal: 20,
     marginVertical: 6,
-    alignItems: 'center'
+    alignItems: 'center',
     justifyContent: 'center',
   },
   pressed: {
@@ -48,4 +48,3 @@ const styles = StyleSheet.create({
     color: '#546E7A',
   },
 });
-
