@@ -2,16 +2,15 @@ import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ResultScreen({ navigation, route }) {
-  const { puntos } = route.params; // BUG INTENCIONAL
+  const { score, total } = route.params; // ✅ corregido
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.card}>
-        <Text style={styles.title}>¡Trivia completada!</Text>
-        <Text style={styles.subtitle}>Tu puntaje final</Text>
-        <Text style={styles.score}>{puntos} / 5</Text>
+        <Text style={styles.title}>¡Juego terminado!</Text>
+        <Text style={styles.subtitle}>Respondiste {score} de {total} correctamente</Text>
         <Pressable
-          onPress={() => navigation.goBack()} // BUG INTENCIONAL
+          onPress={() => navigation.replace('GameScreen')} // ✅ corregido
           style={styles.button}
         >
           <Text style={styles.buttonLabel}>Jugar de nuevo</Text>
@@ -47,6 +46,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#546E7A',
     marginBottom: 12,
+    textAlign: 'center',
   },
   score: {
     fontSize: 48,
