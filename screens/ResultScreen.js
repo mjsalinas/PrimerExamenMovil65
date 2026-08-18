@@ -2,7 +2,7 @@ import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ResultScreen({ navigation, route }) {
-  // Se obtiene 'score' de los parámetros enviado desde GameScreen
+ 
   const { score = 0 } = route.params || {};
 
   return (
@@ -13,7 +13,7 @@ export default function ResultScreen({ navigation, route }) {
           Respondiste {score} de 5 correctamente
         </Text>
         <Pressable
-          onPress={() => navigation.replace('GameScreen')} // Reemplaza la pantalla en el stack
+          onPress={() => navigation.replace('GameScreen')} 
           style={styles.button}
         >
           <Text style={styles.buttonLabel}>Jugar de nuevo</Text>
