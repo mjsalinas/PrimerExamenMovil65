@@ -2,14 +2,14 @@ import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ResultScreen({ navigation, route }) {
-  const { puntos } = route.params; // BUG INTENCIONAL
+  const { score } = route.params; // BUG INTENCIONAL
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.card}>
         <Text style={styles.title}>¡Trivia completada!</Text>
         <Text style={styles.subtitle}>Tu puntaje final</Text>
-        <Text style={styles.score}>{puntos} / 5</Text>
+        <Text style={styles.score}>{score} / 5</Text>
         <Pressable
           onPress={() => navigation.goBack()} // BUG INTENCIONAL
           style={styles.button}
