@@ -14,16 +14,29 @@ export default function GameScreen({ navigation }) {
   const question = questions[currentQuestion];
 
   useEffect(() => {
-    // BUG INTENCIONAL
-    setIsCoolingDown(true);
-    setInterval(() => {
-      setCountdown((prev) => prev + 1); // BUG INTENCIONAL
+    if (attempts === 0) {
+      setIsCoolingDown(true);
+      setCountdown(3);
+    }
+  }, [attempts]);
+
+  useEffect(() => {
+    if (!isCoolingDown) return;
+
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          setIsCoolingDown(false);
+          setAttempts(3);
+          return 0;
+        }
+        return prev - 1;
+      });
     }, 1000);
-    const timer = setTimeout(() => {}, 3000);
-    setIsCoolingDown(false); // BUG INTENCIONAL
-    setAttempts(3); // BUG INTENCIONAL
-    // BUG INTENCIONAL: falta return () => clearTimeout(timer)
-  }, []); // BUG INTENCIONAL
+
+    return () => clearInterval(timer);
+  }, [isCoolingDown]);
 
   const handleAnswer = (index) => {
     if (index === question.correct) {
@@ -74,7 +87,7 @@ export default function GameScreen({ navigation }) {
 
       {isCoolingDown && (
         <Text style={styles.cooldown}>
-          ⏳ Espera {countdown} segundo(s)...
+          Espere {countdown} segundos
         </Text>
       )}
     </SafeAreaView>
