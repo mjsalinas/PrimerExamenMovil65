@@ -26,7 +26,12 @@ export const questions = [
   {
     id: 5,
     question: '¿Quién pintó la Mona Lisa?',
-    options: ['Miguel Ángel', 'Vincent van Gogh', 'Leonardo da Vinci', 'Pablo Picasso'],
+    options: [
+      'Miguel Ángel',
+      'Vincent van Gogh',
+      'Leonardo da Vinci',
+      'Pablo Picasso',
+    ],
     correct: 2,
   },
 ];
